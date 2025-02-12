@@ -1,4 +1,5 @@
 namespace HotelBookingSystem.Domain.Entities;
+using HotelBookingSystem.Domain.Enums;
 
 public class Reservation
 {
