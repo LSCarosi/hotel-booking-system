@@ -15,6 +15,9 @@ public class Reservation
 
     public Reservation(int userId, int hotelId, DateTime checkIn, DateTime checkOut)
     {
+        if (checkOut <= checkIn)
+            throw new ArgumentException("CheckOut deve ser depois do CheckIn.");
+
         UserId = userId;
         HotelId = hotelId;
         CheckIn = checkIn;
