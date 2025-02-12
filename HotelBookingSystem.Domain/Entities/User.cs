@@ -1,5 +1,6 @@
-namespace HotelBookingSystem.Domain.Entities;
 using HotelBookingSystem.Domain.Enums;
+
+namespace HotelBookingSystem.Domain.Entities;
 
 public class User
 {
