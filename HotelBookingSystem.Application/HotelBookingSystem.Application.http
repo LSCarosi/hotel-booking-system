@@ -1,0 +1,6 @@
+@HotelBookingSystem.Application_HostAddress = http://localhost:5216
+
+GET {{HotelBookingSystem.Application_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

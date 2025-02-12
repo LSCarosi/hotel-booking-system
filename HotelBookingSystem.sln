@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HotelBookingSystem.Application", "HotelBookingSystem.Application\HotelBookingSystem.Application.csproj", "{BF6F8A5C-802A-45BA-AB8D-88A31592FF21}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HotelBookingSystem.Domain", "HotelBookingSystem.Domain\HotelBookingSystem.Domain.csproj", "{ABC514EB-98BB-41CA-9468-19CA37445938}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BF6F8A5C-802A-45BA-AB8D-88A31592FF21}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF6F8A5C-802A-45BA-AB8D-88A31592FF21}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF6F8A5C-802A-45BA-AB8D-88A31592FF21}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF6F8A5C-802A-45BA-AB8D-88A31592FF21}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ABC514EB-98BB-41CA-9468-19CA37445938}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ABC514EB-98BB-41CA-9468-19CA37445938}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ABC514EB-98BB-41CA-9468-19CA37445938}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ABC514EB-98BB-41CA-9468-19CA37445938}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
