@@ -2,10 +2,10 @@ namespace HotelBookingSystem.Domain.Entities;
 
 public class Hotel
 {
-    public int Id { get; private set; }
+    public int Id { get; set; }
     public string Name { get; private set; }
     public string Location { get; private set; }
-    public int OwnerId { get; private set; }  
+    public int OwnerId { get; set; }  
 
     public List<Room> Rooms { get; private set; } = new();  
 

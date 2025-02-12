@@ -4,7 +4,7 @@ namespace HotelBookingSystem.Domain.Entities;
 
 public class Reservation
 {
-    public int Id { get; private set; }
+    public int Id { get; set; }
     public int UserId { get; private set; } 
     public int RoomId { get; private set; } 
     public DateTime CheckIn { get; private set; }
