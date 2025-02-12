@@ -6,7 +6,7 @@ public interface IHotelRepository
 {
     Task<Hotel?> GetHotelByIdAsync(int id);
     Task<List<Hotel>> GetAllHotelsAsync();
-    Task<List<Hotel>> GetHotelByOwnerIdAsync(int ownerId);
+    Task<List<Hotel>> GetHotelsByOwnerIdAsync(int ownerId);
     Task AddHotelAsync(Hotel hotel);
     Task UpdateHotelAsync(Hotel hotel);
     Task DeleteHotelAsync(int id);
