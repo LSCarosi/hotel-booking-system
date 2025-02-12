@@ -29,9 +29,9 @@ public class ReservationRepository : IReservationRepository
         return await _context.Reservations.Where(r => r.UserId == userId).ToListAsync();
     }
 
-    public async Task<List<Reservation>> GetReservationByHotelIdAsync(int hotelId)
+    public async Task<List<Reservation>> GetReservationByRoomIdAsync(int roomId)
     {
-        return await _context.Reservations.Where(r => r.HotelId == hotelId).ToListAsync();
+        return await _context.Reservations.Where(r => r.RoomId == roomId).ToListAsync();
     }
 
     public async Task AddReservationAsync(Reservation reservation)
