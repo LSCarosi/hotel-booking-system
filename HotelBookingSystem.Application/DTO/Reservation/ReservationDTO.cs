@@ -9,6 +9,5 @@ public class ReservationDTO
     public int RoomId { get; set; }
     public DateTime CheckIn { get; set; }
     public DateTime CheckOut{ get; set; }
-    public bool IsActive { get; set; } 
     public ReservationStatus Status { get; set; }
 }
