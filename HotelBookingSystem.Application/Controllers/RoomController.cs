@@ -2,6 +2,7 @@
 using HotelBookingSystem.Domain.Entities;
 using HotelBookingSystem.Domain.Interfaces;
 using HotelBookingSystem.Infrastructure.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,6 +11,7 @@ namespace HotelBookingSystem.Application.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class RoomController : ControllerBase
     {
         private readonly IRoomRepository _roomRepository;

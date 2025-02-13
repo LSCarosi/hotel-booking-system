@@ -9,6 +9,7 @@ namespace HotelBookingSystem.Application.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize] 
 public class UserController : ControllerBase
 {
     private readonly IUserRepository _userRepository;
@@ -51,7 +52,7 @@ public class UserController : ControllerBase
         return Ok(userDtos);
     }
 
-
+    [AllowAnonymous] // 🔹 Permite que qualquer pessoa crie um usuário sem precisar de token
     [HttpPost]
     public async Task<IActionResult> CreateUser(CreateUserDTO createUserDTO)
     {
@@ -69,7 +70,6 @@ public class UserController : ControllerBase
         return CreatedAtAction(nameof(GetUserById), new { id = user.Id }, userDTO);
     }
 
-    [Authorize] 
     [HttpPut("update-password")]
     public async Task<IActionResult> UpdatePassword(UpdatePasswordDTO passwordDto)
     {
@@ -87,7 +87,6 @@ public class UserController : ControllerBase
 
         return NoContent();
     }
-
 
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateUser(int id, [FromBody] UpdateUserDTO updatedUser)
@@ -107,8 +106,6 @@ public class UserController : ControllerBase
         });
     }
 
-
-
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteUser(int id)
     {
@@ -119,5 +116,4 @@ public class UserController : ControllerBase
         return Ok($"Usuário ID {id} deletado com sucesso!");
         //return NoContent();
     }
-
 }
