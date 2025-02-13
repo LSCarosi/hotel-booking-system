@@ -18,6 +18,12 @@ public class Hotel
         OwnerId = ownerId;
     }
 
+    public void UpdateHotel(string? name, string? location)
+    {
+        if (!string.IsNullOrEmpty(name)) Name = name;
+        if (!string.IsNullOrEmpty(location)) Location = location;
+    }
+
     public void AddRoom(Room room)
     {
         Rooms.Add(room);
