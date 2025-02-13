@@ -9,6 +9,7 @@ public class Room
     public int SingleBeds { get; private set; } 
     public int DoubleBeds { get; private set; } 
     public decimal PricePerNight { get; private set; }
+    public bool IsAvailable { get; private set; } = true;
 
     public Hotel Hotel { get; private set; }
     public List<Reservation> Reservations { get; private set; } = new();
@@ -29,5 +30,18 @@ public class Room
         SingleBeds = singleBeds;
         DoubleBeds = doubleBeds;
         PricePerNight = pricePerNight;
+        IsAvailable = true;
+    }
+
+    public void MarkAsReserved()
+    {
+        if (!IsAvailable)
+            throw new InvalidOperationException("Este quarto já está reservado.");
+        IsAvailable = false;
+    }
+
+    public void MarkAsAvailable()
+    {
+        IsAvailable = true;
     }
 }
