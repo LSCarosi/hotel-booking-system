@@ -1,8 +1,7 @@
-﻿namespace HotelBookingSystem.Application.DTO;
+﻿namespace HotelBookingSystem.Application.DTO.Room;
 
-public class RoomDTO
+public class CreateRoomDTO
 {
-    public int Id { get; set; }
     public int HotelId { get; set; }
     public string RoomIdentifier { get; set; }
     public int Capacity { get; set; }
