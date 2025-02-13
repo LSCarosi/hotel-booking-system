@@ -19,4 +19,17 @@ public class User
         Password = password;
         Role = role;
     }
+
+    public void UpdateUser(string? name, string? email, UserRole? role)
+    {
+        if (!string.IsNullOrEmpty(name)) Name = name;
+        if (!string.IsNullOrEmpty(email)) Email = email;
+        if (role.HasValue) Role = role.Value;
+    }
+
+    public void UpdatePassword(string password)
+    {
+        if (!string.IsNullOrEmpty(password))
+            Password = password;
+    }
 }
