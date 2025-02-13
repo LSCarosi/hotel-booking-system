@@ -11,4 +11,5 @@ public interface IReservationRepository
     Task AddReservationAsync(Reservation reservation);
     Task UpdateReservationAsync(Reservation reservation);
     Task DeleteReservationAsync(int id);
+    Task<List<Reservation>> GetExpiredReservationsAsync();
 }
