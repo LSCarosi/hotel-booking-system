@@ -1,4 +1,5 @@
 using HotelBookingSystem.Domain.Entities;
+using HotelBookingSystem.Domain.Enums;
 using HotelBookingSystem.Domain.Interfaces;
 using HotelBookingSystem.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -55,4 +56,12 @@ public class ReservationRepository : IReservationRepository
             await _context.SaveChangesAsync();
         }
     }
+
+    public async Task<List<Reservation>> GetExpiredReservationsAsync()
+    {
+        return await _context.Reservations
+            .Where(r => r.CheckOut.AddDays(1) <= DateTime.UtcNow && r.Status == ReservationStatus.Confirmed)
+            .ToListAsync();
+    }
+
 }

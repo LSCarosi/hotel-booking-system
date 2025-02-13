@@ -16,16 +16,36 @@ public class Reservation
 
     private Reservation() { }
 
-    public Reservation(int userId, int roomId, DateTime checkIn, DateTime checkOut)
+    public Reservation(int userId, Room room, int roomId, DateTime checkIn, DateTime checkOut)
     {
         if (checkOut <= checkIn)
             throw new ArgumentException("CheckOut deve ser depois do CheckIn.");
 
+        if (!room.IsAvailable)
+            throw new InvalidOperationException("Este quarto já está reservado.");
+
         UserId = userId;
         RoomId = roomId;
+        Room = room;
         CheckIn = checkIn;
         CheckOut = checkOut;
-        Status = ReservationStatus.Pending;
+        room.MarkAsReserved();
+        Status = ReservationStatus.Confirmed;
+    }
+
+    public void Update(DateTime? checkIn, DateTime? checkOut)
+    {
+        if (checkIn.HasValue) CheckIn = checkIn.Value;
+        if (checkOut.HasValue) CheckOut = checkOut.Value;
+    }
+
+    public void Cancel()
+    {
+        if (Status == ReservationStatus.Canceled)
+            throw new InvalidOperationException("Esta reserva já foi cancelada.");
+
+        Status = ReservationStatus.Canceled;
+        Room.MarkAsAvailable(); 
     }
 }
 

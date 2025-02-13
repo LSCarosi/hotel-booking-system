@@ -1,63 +1,132 @@
-﻿using HotelBookingSystem.Domain.Entities;
+﻿using HotelBookingSystem.Application.DTO.Reservation;
+using HotelBookingSystem.Domain.Entities;
 using HotelBookingSystem.Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace HotelBookingSystem.Application.Controllers;
-
-[ApiController]
-[Route("api/[controller]")]
-public class ReservationController : ControllerBase
+namespace HotelBookingSystem.Application.Controllers
 {
-    private readonly IReservationRepository _reservationRepository;
-
-    public ReservationController(IReservationRepository reservationRepository)
+    [ApiController]
+    [Route("api/[controller]")]
+    public class ReservationController : ControllerBase
     {
-        _reservationRepository = reservationRepository;
-    }
+        private readonly IReservationRepository _reservationRepository;
+        private readonly IRoomRepository _roomRepository;
 
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetReservationById(int id)
-    {
-        var reservation = await _reservationRepository.GetReservationByIdAsync(id);
-        if (reservation == null) return NotFound("Reserva não encontrada.");
-        return Ok(reservation);
-    }
+        public ReservationController(IReservationRepository reservationRepository, IRoomRepository roomRepository)
+        {
+            _reservationRepository = reservationRepository;
+            _roomRepository = roomRepository;
+        }
 
-    [HttpGet("user/{userId}")]
-    public async Task<IActionResult> GetReservationsByUser(int userId)
-    {
-        var reservations = await _reservationRepository.GetReservationByUserIdAsync(userId);
-        return Ok(reservations);
-    }
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetReservationById(int id)
+        {
+            var reservation = await _reservationRepository.GetReservationByIdAsync(id);
+            if (reservation == null) return NotFound("Reserva não encontrada.");
 
-    [HttpGet("room/{roomId}")]
-    public async Task<IActionResult> GetReservationsByRoom(int roomId)
-    {
-        var reservations = await _reservationRepository.GetReservationByRoomIdAsync(roomId);
-        return Ok(reservations);
-    }
+            var reservationDTO = new ReservationDTO
+            {
+                Id = reservation.Id,
+                UserId = reservation.UserId,
+                RoomId = reservation.RoomId,
+                CheckIn = reservation.CheckIn,
+                CheckOut = reservation.CheckOut,
+                Status = reservation.Status
+            };
+            return Ok(reservationDTO);
+        }
 
-    [HttpPost]
-    public async Task<IActionResult> CreateReservation(Reservation reservation)
-    {
-        await _reservationRepository.AddReservationAsync(reservation);
-        return CreatedAtAction(nameof(GetReservationById), new { id = reservation.Id }, reservation);
-    }
+        [HttpGet("user/{userId}")]
+        public async Task<IActionResult> GetReservationsByUser(int userId)
+        {
+            var reservations = await _reservationRepository.GetReservationByUserIdAsync(userId);
+            var reservationDTOs = reservations.Select(r => new ReservationDTO
+            {
+                Id = r.Id,
+                UserId = r.UserId,
+                RoomId = r.RoomId,
+                CheckIn = r.CheckIn,
+                CheckOut = r.CheckOut,
+                Status = r.Status
+            }).ToList();
+            return Ok(reservationDTOs);
+        }
 
-    [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateReservation(int id, Reservation updatedReservation)
-    {
-        var existingReservation = await _reservationRepository.GetReservationByIdAsync(id);
-        if (existingReservation == null) return NotFound("Reserva não encontrada.");
+        [HttpGet("room/{roomId}")]
+        public async Task<IActionResult> GetReservationsByRoom(int roomId)
+        {
+            var reservations = await _reservationRepository.GetReservationByRoomIdAsync(roomId);
+            var reservationDTOs = reservations.Select(r => new ReservationDTO
+            {
+                Id = r.Id,
+                UserId = r.UserId,
+                RoomId = r.RoomId,
+                CheckIn = r.CheckIn,
+                CheckOut = r.CheckOut,
+                Status = r.Status
+            }).ToList();
+            return Ok(reservationDTOs);
+        }
 
-        await _reservationRepository.UpdateReservationAsync(updatedReservation);
-        return NoContent();
-    }
+        [HttpPost]
+        public async Task<IActionResult> CreateReservation(CreateReservationDTO createReservationDTO)
+        {
+            var room = await _roomRepository.GetRoomByIdAsync(createReservationDTO.RoomId);
+            if (room == null) return NotFound("Quarto não encontrado.");
+            if (!room.IsAvailable) return BadRequest("O quarto já está reservado.");
 
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteReservation(int id)
-    {
-        await _reservationRepository.DeleteReservationAsync(id);
-        return NoContent();
+            var reservation = new Reservation(createReservationDTO.UserId, room, createReservationDTO.RoomId, createReservationDTO.CheckIn, createReservationDTO.CheckOut);
+            await _reservationRepository.AddReservationAsync(reservation);
+            room.MarkAsReserved();
+            await _roomRepository.UpdateRoomAsync(room);
+
+            return CreatedAtAction(nameof(GetReservationById), new { id = reservation.Id }, new ReservationDTO
+            {
+                Id = reservation.Id,
+                UserId = reservation.UserId,
+                RoomId = reservation.RoomId,
+                CheckIn = reservation.CheckIn,
+                CheckOut = reservation.CheckOut,
+                Status = reservation.Status
+            });
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateReservation(int id, UpdateReservationDTO updateReservationDTO)
+        {
+            var existingReservation = await _reservationRepository.GetReservationByIdAsync(id);
+            if (existingReservation == null) return NotFound("Reserva não encontrada.");
+
+            existingReservation.Update(updateReservationDTO.CheckIn, updateReservationDTO.CheckOut);
+            await _reservationRepository.UpdateReservationAsync(existingReservation);
+            return Ok(new ReservationDTO
+            {
+                Id = existingReservation.Id,
+                UserId = existingReservation.UserId,
+                RoomId = existingReservation.RoomId,
+                CheckIn = existingReservation.CheckIn,
+                CheckOut = existingReservation.CheckOut,
+                Status = existingReservation.Status
+            });
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteReservation(int id)
+        {
+            var reservation = await _reservationRepository.GetReservationByIdAsync(id);
+            if (reservation == null) return NotFound("Reserva não encontrada.");
+
+            var room = await _roomRepository.GetRoomByIdAsync(reservation.RoomId);
+            if (room != null)
+            {
+                room.MarkAsAvailable();
+                await _roomRepository.UpdateRoomAsync(room);
+            }
+
+            await _reservationRepository.DeleteReservationAsync(id);
+            return NoContent();
+        }
     }
 }
