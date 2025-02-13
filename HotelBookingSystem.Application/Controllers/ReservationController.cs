@@ -1,6 +1,7 @@
 ﻿using HotelBookingSystem.Application.DTO.Reservation;
 using HotelBookingSystem.Domain.Entities;
 using HotelBookingSystem.Domain.Interfaces;
+using HotelBookingSystem.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,11 +14,13 @@ namespace HotelBookingSystem.Application.Controllers
     {
         private readonly IReservationRepository _reservationRepository;
         private readonly IRoomRepository _roomRepository;
+        private readonly IUserRepository _userRepository;
 
-        public ReservationController(IReservationRepository reservationRepository, IRoomRepository roomRepository)
+        public ReservationController(IReservationRepository reservationRepository, IRoomRepository roomRepository, IUserRepository userRepository)
         {
             _reservationRepository = reservationRepository;
             _roomRepository = roomRepository;
+            _userRepository = userRepository;
         }
 
         [HttpGet("{id}")]
@@ -41,6 +44,9 @@ namespace HotelBookingSystem.Application.Controllers
         [HttpGet("user/{userId}")]
         public async Task<IActionResult> GetReservationsByUser(int userId)
         {
+            var user = await _userRepository.GetUserByIdAsync(userId);
+            if (user == null) return NotFound("Usuário não encontrado.");
+
             var reservations = await _reservationRepository.GetReservationByUserIdAsync(userId);
             var reservationDTOs = reservations.Select(r => new ReservationDTO
             {
@@ -51,12 +57,18 @@ namespace HotelBookingSystem.Application.Controllers
                 CheckOut = r.CheckOut,
                 Status = r.Status
             }).ToList();
+
+            if (reservationDTOs.Count == 0) return NoContent();
+
             return Ok(reservationDTOs);
         }
 
         [HttpGet("room/{roomId}")]
         public async Task<IActionResult> GetReservationsByRoom(int roomId)
         {
+            var room = await _roomRepository.GetRoomByIdAsync(roomId);
+            if (room == null) return NotFound("Quarto não encontrado.");
+
             var reservations = await _reservationRepository.GetReservationByRoomIdAsync(roomId);
             var reservationDTOs = reservations.Select(r => new ReservationDTO
             {
@@ -67,6 +79,9 @@ namespace HotelBookingSystem.Application.Controllers
                 CheckOut = r.CheckOut,
                 Status = r.Status
             }).ToList();
+
+            if (reservationDTOs.Count == 0) return NoContent();
+
             return Ok(reservationDTOs);
         }
 
@@ -126,7 +141,10 @@ namespace HotelBookingSystem.Application.Controllers
             }
 
             await _reservationRepository.DeleteReservationAsync(id);
-            return NoContent();
+
+            return Ok($"Reserva ID {id} deletado com sucesso!");
+
+            //return NoContent();
         }
     }
 }

@@ -116,7 +116,8 @@ public class UserController : ControllerBase
         if (existingUser == null) return NotFound("Usuário não encontrado.");
 
         await _userRepository.DeleteUserAsync(id);
-        return NoContent();
+        return Ok($"Usuário ID {id} deletado com sucesso!");
+        //return NoContent();
     }
 
 }

@@ -1,6 +1,9 @@
 ﻿using HotelBookingSystem.Application.DTO.Hotel;
+using HotelBookingSystem.Application.DTO.User;
 using HotelBookingSystem.Domain.Entities;
+using HotelBookingSystem.Domain.Enums;
 using HotelBookingSystem.Domain.Interfaces;
+using HotelBookingSystem.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,10 +15,12 @@ namespace HotelBookingSystem.Application.Controllers;
 public class HotelController : ControllerBase
 {
     private readonly IHotelRepository _hotelRepository;
+    private readonly IUserRepository _userRepository;
 
-    public HotelController(IHotelRepository hotelRepository)
+    public HotelController(IHotelRepository hotelRepository, IUserRepository userRepository)
     {
         _hotelRepository = hotelRepository;
+        _userRepository = userRepository;
     }
 
     [HttpGet("{id}")]
@@ -51,6 +56,10 @@ public class HotelController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateHotel(CreateHotelDTO createHotelDTO)
     {
+        var existingUser = await _userRepository.GetUserByIdAsync(createHotelDTO.OwnerId);
+        if (existingUser == null) return NotFound("Usuário não encontrado.");
+        if (existingUser.Role == UserRole.Guest) return NotFound("Usuário deve ter permissões para hospedar um hotel.");
+
         var hotel = new Hotel(createHotelDTO.Name, createHotelDTO.Location, createHotelDTO.OwnerId);
         await _hotelRepository.AddHotelAsync(hotel);
 
@@ -88,6 +97,7 @@ public class HotelController : ControllerBase
         if (existingHotel == null) return NotFound("Hotel não encontrado.");
 
         await _hotelRepository.DeleteHotelAsync(id);
-        return NoContent();
+        return Ok($"Hotel ID {id} deletado com sucesso!");
+        //return NoContent();
     }
 }
