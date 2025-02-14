@@ -14,10 +14,19 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("HotelBookingDbConnection")));
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngular", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Pegando a chave secreta do appsettings.json
 var key = Encoding.ASCII.GetBytes(builder.Configuration["JwtSettings:SecretKey"] ?? "CHAVE_PADRAO_INSEGURA");
 
 builder.Services.AddAuthentication(options =>
@@ -33,8 +42,8 @@ builder.Services.AddAuthentication(options =>
     {
         ValidateIssuerSigningKey = true,
         IssuerSigningKey = new SymmetricSecurityKey(key),
-        ValidateIssuer = false, // Pode ser alterado para true e configurado no appsettings.json
-        ValidateAudience = false // Pode ser alterado para true e configurado no appsettings.json
+        ValidateIssuer = false,
+        ValidateAudience = false
     };
 });
 
@@ -56,7 +65,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// Adiciona a autenticação antes dos controllers
+app.UseCors("AllowAngular");
+
 app.UseAuthentication();
 app.UseAuthorization();
 
