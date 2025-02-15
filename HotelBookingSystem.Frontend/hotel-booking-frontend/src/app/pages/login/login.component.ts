@@ -20,7 +20,6 @@ export class LoginComponent {
   onSubmit() {
     this.authService.login(this.email, this.password).subscribe({
       next: (response) => {
-        console.log('Login bem-sucedido!', response);
         localStorage.setItem('token', response.token);
         this.router.navigate(['/']);
       },
@@ -28,5 +27,9 @@ export class LoginComponent {
         this.errorMessage = 'Login falhou. Verifique suas credenciais!';
       }
     });
+  }
+
+  navigateToRegister() {
+    this.router.navigate(['/register']);
   }
 }
