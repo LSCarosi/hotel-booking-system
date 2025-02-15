@@ -1,0 +1,97 @@
+    .register-container {
+    max-width: 350px;
+    margin: auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    }
+
+    h2 {
+    margin-bottom: 15px;
+    }
+
+    form {
+    display: flex;
+    flex-direction: column;
+    }
+
+    label {
+    margin-top: 10px;
+    text-align: left;
+    }
+
+    input {
+    padding: 8px;
+    margin: 5px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    }
+
+    button {
+    margin-top: 15px;
+    padding: 10px;
+    background: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    }
+
+    button:hover {
+    background: #0056b3;
+    }
+
+    .login-link {
+    margin-top: 15px;
+    }
+
+    .login-link a {
+    color: #007bff;
+    text-decoration: none;
+    }
+
+    .login-link a:hover {
+    text-decoration: underline;
+    }
+
+select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: white;
+    font-size: 16px;
+    color: #333;
+    cursor: pointer;
+  }
+  
+  select:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  }
+
+  option {
+    font-size: 16px;
+    padding: 10px;
+  }
+
+.invalid {
+  border: 2px solid red;
+  background-color: #ffe6e6;
+}
+
+.error-message {
+  color: red;
+  font-size: 14px;
+  margin-top: 4px;
+  padding: 2px 6px;
+  background-color: #ffe6e6;
+  border-left: 4px solid red;
+  display: inline-block;
+}
+
+  

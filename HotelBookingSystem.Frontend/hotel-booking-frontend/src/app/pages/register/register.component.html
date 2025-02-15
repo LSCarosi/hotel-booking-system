@@ -1,3 +1,34 @@
-<h1>Teste</h1>
-<p>A</p>
-<h1>O que aconteceu aqui?</h1>
+<form (ngSubmit)="onSubmit()">
+  <!-- Nome -->
+  <label for="name">Nome</label>
+  <input type="text" id="name" [(ngModel)]="name" name="name"
+         [ngClass]="{'invalid': nameError}" (blur)="validateInputs()" required />
+  <div *ngIf="nameError" class="error-message">{{ nameError }}</div>
+
+  <!-- Email -->
+  <label for="email">E-mail</label>
+  <input type="email" id="email" [(ngModel)]="email" name="email"
+         [ngClass]="{'invalid': emailError}" (blur)="validateInputs()" required />
+  <div *ngIf="emailError" class="error-message">{{ emailError }}</div>
+
+  <!-- Senha -->
+  <label for="password">Senha</label>
+  <input type="password" id="password" [(ngModel)]="password" name="password"
+         [ngClass]="{'invalid': passwordError}" (blur)="validateInputs()" required />
+  <div *ngIf="passwordError" class="error-message">{{ passwordError }}</div>
+
+  <!-- Confirmar Senha -->
+  <label for="confirmPassword">Confirmar Senha</label>
+  <input type="password" id="confirmPassword" [(ngModel)]="confirmPassword" name="confirmPassword"
+         [ngClass]="{'invalid': confirmPasswordError}" (blur)="validateInputs()" required />
+  <div *ngIf="confirmPasswordError" class="error-message">{{ confirmPasswordError }}</div>
+
+  <!-- Tipo de usuário -->
+  <label for="role">Tipo de Usuário</label>
+  <select id="role" [(ngModel)]="role" name="role">
+    <option [value]="1">Hóspede</option>
+    <option [value]="0">Hoteleiro</option>
+  </select>
+
+  <button type="submit">Criar Conta</button>
+</form>
