@@ -22,6 +22,7 @@ export class LoginComponent {
       next: (response) => {
         localStorage.setItem('token', response.token);
         this.router.navigate(['/']);
+        console.log("Login realizado com sucesso!");
       },
       error: () => {
         this.errorMessage = 'Login falhou. Verifique suas credenciais!';
