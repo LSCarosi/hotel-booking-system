@@ -70,22 +70,20 @@ public class UserController : ControllerBase
         return CreatedAtAction(nameof(GetUserById), new { id = user.Id }, userDTO);
     }
 
-    [HttpPut("update-password")]
-    public async Task<IActionResult> UpdatePassword(UpdatePasswordDTO passwordDto)
+    [HttpPut("update-password/{Id}")]
+    public async Task<IActionResult> UpdatePassword(int Id, UpdatePasswordDTO passwordDto)
     {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        if (userId == null) return Unauthorized("Usuário não autenticado.");
+        var user = await _userRepository.GetUserByIdAsync(Id);
+        if (user == null) return NotFound("Usuário não encontrado.");
 
-        var existingUser = await _userRepository.GetUserByIdAsync(int.Parse(userId));
-        if (existingUser == null) return NotFound("Usuário não encontrado.");
-
-        if (existingUser.Password != passwordDto.CurrentPassword)
+        if (user.Password != passwordDto.CurrentPassword)
             return BadRequest("Senha atual incorreta.");
 
-        existingUser.UpdatePassword(passwordDto.NewPassword);
-        await _userRepository.UpdateUserAsync(existingUser);
+        user.UpdatePassword(passwordDto.NewPassword);
+        await _userRepository.UpdateUserAsync(user);
 
-        return NoContent();
+        return Ok($"Senha do Usuário ID {Id} alterada com sucesso!");
+        //return NoContent();
     }
 
     [HttpPut("{id}")]
