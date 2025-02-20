@@ -5,7 +5,7 @@ public class Room
     public int Id { get; set; }
     public int HotelId { get; private set; }
     public string RoomIdentifier { get; private set; }
-    public int Capacity => SingleBeds + (DoubleBeds * 2); // Capacidade calculada automaticamente
+    public int Capacity => SingleBeds + (DoubleBeds * 2);
     public int SingleBeds { get; private set; }
     public int DoubleBeds { get; private set; }
     public decimal PricePerNight { get; private set; }
