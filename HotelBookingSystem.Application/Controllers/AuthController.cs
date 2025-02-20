@@ -4,6 +4,7 @@ using HotelBookingSystem.Domain.Interfaces;
 using HotelBookingSystem.Application.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HotelBookingSystem.Application.Controllers
 {
@@ -20,6 +21,7 @@ namespace HotelBookingSystem.Application.Controllers
             _tokenService = tokenService;
         }
 
+        [AllowAnonymous]
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginDTO loginDTO)
         {
