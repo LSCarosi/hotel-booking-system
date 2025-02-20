@@ -52,7 +52,7 @@ public class UserController : ControllerBase
         return Ok(userDtos);
     }
 
-    [AllowAnonymous] // 🔹 Permite que qualquer pessoa crie um usuário sem precisar de token
+    [AllowAnonymous] 
     [HttpPost]
     public async Task<IActionResult> CreateUser(CreateUserDTO createUserDTO)
     {
