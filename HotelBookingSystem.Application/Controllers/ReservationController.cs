@@ -44,7 +44,7 @@ namespace HotelBookingSystem.Application.Controllers
         }
 
         [HttpGet("user/{userId}")]
-        public async Task<IActionResult> GetReservationsByUser(int userId)
+        public async Task<IActionResult> GetReservationsByUserId(int userId)
         {
             var user = await _userRepository.GetUserByIdAsync(userId);
             if (user == null) return NotFound("Usuário não encontrado.");
@@ -66,7 +66,7 @@ namespace HotelBookingSystem.Application.Controllers
         }
 
         [HttpGet("room/{roomId}")]
-        public async Task<IActionResult> GetReservationsByRoom(int roomId)
+        public async Task<IActionResult> GetReservationsByRoomId(int roomId)
         {
             var room = await _roomRepository.GetRoomByIdAsync(roomId);
             if (room == null) return NotFound("Quarto não encontrado.");
@@ -90,6 +90,9 @@ namespace HotelBookingSystem.Application.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateReservation(CreateReservationDTO createReservationDTO)
         {
+            var user = await _userRepository.GetUserByIdAsync(createReservationDTO.UserId);
+            if (user == null) return NotFound("Usuário não encontrado.");
+
             var room = await _roomRepository.GetRoomByIdAsync(createReservationDTO.RoomId);
             if (room == null) return NotFound("Quarto não encontrado.");
             if (!room.IsAvailable) return BadRequest("O quarto já está reservado.");
